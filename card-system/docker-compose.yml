@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: card_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_DATABASE: card_system
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  card_api:
+    build: .
+    container_name: card_api
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: root1234
+      DB_NAME: card_system
+    ports:
+      - "8000:8000"
+
+volumes:
+  mysql_data:
