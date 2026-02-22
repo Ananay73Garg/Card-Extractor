@@ -2,4 +2,4 @@
 
 ## Card-System : Docker build
 
-## Card_detector.py : Local build
+## Card_detector.py : Local build - Ollama
